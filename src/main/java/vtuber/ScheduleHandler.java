@@ -64,6 +64,24 @@ public class ScheduleHandler {
         return upcomingAndLiveVideos;
 
     }
+    public List<SimpleVideo> getScheduleChannelId(String channelId, int limit) {
+        System.out.println("Getting schedule for " + channelId);
+        List<SimpleVideo> upcomingAndLiveVideos = new ArrayList<>();
+        try {
+            List<SimpleVideo> upcomingVideos = holodex.getLiveAndUpcomingVideos(new VideoQueryBuilder().setChannelId(channelId).setStatus("upcoming"));
+            List<SimpleVideo> liveVideos = holodex.getLiveAndUpcomingVideos(new VideoQueryBuilder().setStatus("live").setChannelId(channelId));
+            upcomingAndLiveVideos.addAll(liveVideos);
+            upcomingAndLiveVideos.addAll(upcomingVideos);
+            if (upcomingAndLiveVideos.size() > limit) {
+                upcomingAndLiveVideos = upcomingAndLiveVideos.subList(0, limit);
+            }
+        } catch (HolodexException e) {
+            System.out.println("Error getting schedule for " + channelId);
+            System.out.println(e.getMessage());
+        }
+        return upcomingAndLiveVideos;
+
+    }
 
     public boolean organizationExists(String org) {
         List<Channel> channels;
