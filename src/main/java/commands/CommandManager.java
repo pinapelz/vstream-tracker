@@ -1,6 +1,7 @@
 package commands;
 
 import builders.ScheduleMessageBuilder;
+import fileutils.UpcomingChannelsManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,9 +12,11 @@ import java.util.ArrayList;
 public class CommandManager extends ListenerAdapter {
     ScheduleHandler scheduleHandler;
     ScheduleMessageBuilder scb;
+    UpcomingChannelsManager ucm;
     public CommandManager(String holodexAPIKey) {
         scheduleHandler = new ScheduleHandler(holodexAPIKey);
         scb = new ScheduleMessageBuilder();
+        ucm = new UpcomingChannelsManager();
         System.out.println("CommandManager initialized");
     }
     @Override
@@ -21,10 +24,21 @@ public class CommandManager extends ListenerAdapter {
         String command = e.getName();
         MessageEmbed scheduleMessage;
         switch (command) {
+            case "configure":
+                String type  = e.getOption("type").getAsString();
+                String id = e.getOption("id").getAsString();
+                long discordChannelId = e.getChannel().getIdLong();
+                if (checkValidConfig(type, id) == false){
+                    e.reply("Sorry, I couldn't find any information on that channel. Please check the ID you provided").queue();
+                    return;
+                }
+                ucm.addNewEntry(type, id, Long.toString(discordChannelId));
+                e.reply("Successfully added " + type + " " + id + " feed to this channel. Please restart the bot for this to take effect").queue();
+                break;
             case "schedule-channel":
                 String channelId = e.getOption("channel-id").getAsString();
                 if (scheduleHandler.channelExists(channelId) == false) {
-                    e.reply("Sorry, I couldn't find any information on that channel. Please ensure it matches Holodex's spelling").queue();
+                    e.reply("Sorry, I couldn't find any information on that channel. Please check the ID you provided").queue();
                     return;
                 }
                 scheduleMessage = scb.buildLiveAndUpcomingMessage(scheduleHandler.getScheduleChannelId(channelId, 10));
@@ -62,6 +76,25 @@ public class CommandManager extends ListenerAdapter {
                 break;
         }
         return messageEmbeds;
+    }
+
+    public boolean checkValidConfig(String type, String id){
+        switch (type) {
+            case "org":
+                if (scheduleHandler.organizationExists(id) == false) {
+                    return false;
+                }
+                break;
+            case "channel":
+                if (scheduleHandler.channelExists(id) == false) {
+                    return false;
+                }
+                break;
+            default:
+                System.out.println("Unknown type");
+                throw new IllegalArgumentException("Unknown type");
+        }
+        return true;
     }
 
 }
