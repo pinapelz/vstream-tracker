@@ -42,7 +42,7 @@ public class ScheduleMessageBuilder {
                 titleText = video.channel.name + " - " + unixTimeStr;
             }
             String videoURL = "https://www.youtube.com/watch?v=" + video.id;
-            messageBuilder.addField(titleText, "["+video.title+"]"+"("+videoURL+")", true);
+            messageBuilder.addField(titleText, "["+video.title+"]"+"("+videoURL+")", false);
         }
         return messageBuilder.build();
 
