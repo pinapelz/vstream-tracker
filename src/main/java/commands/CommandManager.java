@@ -19,7 +19,18 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onSlashCommand(SlashCommandEvent e) {
         String command = e.getName();
+        MessageEmbed scheduleMessage;
         switch (command) {
+            case "schedule-channel":
+                String channelId = e.getOption("channel-id").getAsString();
+                if (scheduleHandler.channelExists(channelId) == false) {
+                    e.reply("Sorry, I couldn't find any information on that channel. Please ensure it matches Holodex's spelling").queue();
+                    return;
+                }
+                scheduleMessage = scb.buildLiveAndUpcomingMessage(scheduleHandler.getScheduleChannelId(channelId, 10));
+                e.deferReply().queue();
+                e.getHook().sendMessageEmbeds(scheduleMessage).queue();
+                break;
             case "schedule":
                 String organization = e.getOption("organization").getAsString();
                 organization = organization.replaceAll(" ", "%20");
@@ -27,7 +38,7 @@ public class CommandManager extends ListenerAdapter {
                     e.reply("Sorry, I couldn't find any information on that organization. Please ensure it matches Holodex's spelling").queue();
                     return;
                 }
-                MessageEmbed scheduleMessage = scb.buildLiveAndUpcomingMessage(scheduleHandler.getSchedule(organization, 10));
+                scheduleMessage = scb.buildLiveAndUpcomingMessage(scheduleHandler.getSchedule(organization, 10));
                 e.deferReply().queue();
                 e.getHook().sendMessageEmbeds(scheduleMessage).queue();
                 break;
