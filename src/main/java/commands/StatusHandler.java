@@ -10,6 +10,7 @@ public class StatusHandler {
 
     }
     public void updateSlashCommands(){
+        System.out.println("Adding slash commands");
         jda.upsertCommand(new CommandData("schedule", "Shows upcoming streams and events for a given organization")
                 .addOption(OptionType.STRING, "organization",
                         "Holodex Organization Name (e.g Hololive, Nijisanji, Phase Connect, PRISM, Production Kawaii)",
@@ -28,6 +29,15 @@ public class StatusHandler {
                 .queue();
 
 
+    }
+
+    public void purgeSlashCommands(){
+        System.out.println("Purging all slash commands");
+        jda.retrieveCommands().queue(commands -> {
+            for (int i = 0; i < commands.size(); i++) {
+                commands.get(i).delete().queue();
+            }
+        });
     }
 
 
