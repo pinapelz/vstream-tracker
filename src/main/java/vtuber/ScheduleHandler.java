@@ -2,7 +2,10 @@ package vtuber;
 
 import com.pina.Holodex;
 import com.pina.HolodexException;
+import com.pina.datatypes.Channel;
+import com.pina.datatypes.SimpleChannel;
 import com.pina.datatypes.SimpleVideo;
+import com.pina.query.ChannelQueryBuilder;
 import com.pina.query.VideoQueryBuilder;
 
 import java.util.ArrayList;
@@ -62,4 +65,31 @@ public class ScheduleHandler {
         return upcomingAndLiveVideos;
 
     }
+
+    public boolean organizationExists(String org) {
+        List<Channel> channels = new ArrayList<>();
+        try {
+            channels = holodex.getChannels(new ChannelQueryBuilder().setOrg(org));
+        } catch (HolodexException e) {
+            System.out.println("Couldn't find organization with name " + org);
+            return false;
+        }
+        return channels.size() > 0;
+    }
+
+    public boolean channelExists(String channelId) {
+        Channel channel = new Channel();
+        try{
+            channel = holodex.getChannel(channelId);
+            if (channel.name == null) {
+                throw new HolodexException("Searching channel successful but no results found");
+            }
+        } catch (HolodexException e) {
+            System.out.println("Couldn't find channel with id " + channelId);
+            return false;
+        }
+        return true;
+    }
+
 }
+
