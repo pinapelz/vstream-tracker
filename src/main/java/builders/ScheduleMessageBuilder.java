@@ -38,7 +38,11 @@ public class ScheduleMessageBuilder {
                 unixTimeStr = "LIVE \uD83D\uDD34";
             }
             String titleText = video.channel.english_name + " - " + unixTimeStr;
-            if (video.channel.english_name.equals(null)){
+            try {
+                if (video.channel.english_name.equals(null)) {
+                    titleText = video.channel.name + " - " + unixTimeStr;
+                }
+            } catch (NullPointerException e){
                 titleText = video.channel.name + " - " + unixTimeStr;
             }
             String videoURL = "https://www.youtube.com/watch?v=" + video.id;
