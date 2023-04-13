@@ -27,8 +27,8 @@ public class Main extends ListenerAdapter{
 
     public void initializeBot(){
         fileDataProcessor = new FileDataProcessor();
-        commandManager = new CommandManager(fileDataProcessor.readCredential("holodexAPIKey"));
-        jdaBuilder = JDABuilder.createDefault(fileDataProcessor.readCredential("discordToken"));
+        commandManager = new CommandManager(fileDataProcessor.getField("holodexAPIKey"));
+        jdaBuilder = JDABuilder.createDefault(fileDataProcessor.getField("discordToken"));
         jdaBuilder.addEventListeners(commandManager);
         jdaBuilder.addEventListeners(this);
         try {
