@@ -30,12 +30,9 @@ public class Main extends ListenerAdapter{
         commandManager = new CommandManager(fileDataProcessor.readCredential("holodexAPIKey"));
         jdaBuilder = JDABuilder.createDefault(fileDataProcessor.readCredential("discordToken"));
         jdaBuilder.addEventListeners(commandManager);
+        jdaBuilder.addEventListeners(this);
         try {
             jda = jdaBuilder.build();
-            statusHandler = new StatusHandler(jda);
-            statusHandler.updateSlashCommands();
-            System.out.println("Bot is ready!");
-            initializeAutoRefresh();
         }
         catch (LoginException e) {
             System.out.println("Unable to login with the provided token. Please check your token and try again.");
@@ -56,18 +53,19 @@ public class Main extends ListenerAdapter{
                 }
                 for (OrgChannelTuple orgChannelTuple : refreshChannels) {
                     System.out.println("Refreshing " + orgChannelTuple.getType() + " " + orgChannelTuple.getName());
+                    jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).purgeMessages(
+                            jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).getIterableHistory().complete());
                     List<MessageEmbed> messageEmbeds = commandManager.updateUpcomingChannel(orgChannelTuple.getName(), orgChannelTuple.getType());
                     if (messageEmbeds.size() == 0) {
                         continue;
                     }
-                    jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).purgeMessages(
-                            jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).getIterableHistory().complete());
                     for (MessageEmbed messageEmbed : messageEmbeds) {
                         jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).sendMessageEmbeds(messageEmbed).queue();
                     }
                 }
             }
             catch(NullPointerException ex){
+                System.out.println(ex);
                 System.out.println("Channel is empty. Skipping refresh there");
             }
             catch (Exception e) {
@@ -84,6 +82,15 @@ public class Main extends ListenerAdapter{
         Message message = e.getMessage();
         String msg = message.getContentDisplay();
 
+    }
+
+    @Override
+    public void onReady(net.dv8tion.jda.api.events.ReadyEvent event) {
+        System.out.println("Logged in as " + event.getJDA().getSelfUser().getAsTag());
+        statusHandler = new StatusHandler(jda);
+        statusHandler.updateSlashCommands();
+        initializeAutoRefresh();
+        System.out.println("Bot is ready!");
     }
     public static void main(String args[]) {
         Main main = new Main();
