@@ -16,7 +16,7 @@ import java.util.List;
 
 public class FileDataProcessor {
 
-    public static String readCredential(String parameter){
+    public static String getField(String parameter){
         try {
             Object obj = new JSONParser().parse(new FileReader("settings//config.json"));
             JSONObject jo = (JSONObject) obj;
