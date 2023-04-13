@@ -23,6 +23,10 @@ public class CommandManager extends ListenerAdapter {
             case "schedule":
                 String organization = e.getOption("organization").getAsString();
                 organization = organization.replaceAll(" ", "%20");
+                if (scheduleHandler.organizationExists(organization) == false) {
+                    e.reply("Sorry, I couldn't find any information on that organization. Please ensure it matches Holodex's spelling").queue();
+                    return;
+                }
                 MessageEmbed scheduleMessage = scb.buildLiveAndUpcomingMessage(scheduleHandler.getSchedule(organization, 10));
                 e.deferReply().queue();
                 e.getHook().sendMessageEmbeds(scheduleMessage).queue();
