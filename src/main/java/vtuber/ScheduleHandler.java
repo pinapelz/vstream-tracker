@@ -3,7 +3,6 @@ package vtuber;
 import com.pina.Holodex;
 import com.pina.HolodexException;
 import com.pina.datatypes.Channel;
-import com.pina.datatypes.SimpleChannel;
 import com.pina.datatypes.SimpleVideo;
 import com.pina.query.ChannelQueryBuilder;
 import com.pina.query.VideoQueryBuilder;
@@ -67,7 +66,7 @@ public class ScheduleHandler {
     }
 
     public boolean organizationExists(String org) {
-        List<Channel> channels = new ArrayList<>();
+        List<Channel> channels;
         try {
             channels = holodex.getChannels(new ChannelQueryBuilder().setOrg(org));
         } catch (HolodexException e) {
@@ -78,7 +77,7 @@ public class ScheduleHandler {
     }
 
     public boolean channelExists(String channelId) {
-        Channel channel = new Channel();
+        Channel channel;
         try{
             channel = holodex.getChannel(channelId);
             if (channel.name == null) {
