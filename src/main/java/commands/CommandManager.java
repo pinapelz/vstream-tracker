@@ -25,12 +25,20 @@ public class CommandManager extends ListenerAdapter {
         MessageEmbed scheduleMessage;
         switch (command) {
             case "remove-config":
+                if (!hasPermission(e)){
+                    e.reply("Sorry, you don't have permission to run this command").queue();
+                    return;
+                }
                 String searchTerm = e.getOption("term").getAsString();
                 long currentDiscChannelID = e.getChannel().getIdLong();
                 ucm.removeEntry(searchTerm, currentDiscChannelID);
                 e.reply("Successfully removed " + searchTerm + " from this channel. Please restart the bot for this to take effect").queue();
                 break;
             case "configure":
+                if (!hasPermission(e)){
+                    e.reply("Sorry, you don't have permission to run this command").queue();
+                    return;
+                }
                 System.out.println("RUNNING?");
                 String type  = e.getOption("type").getAsString();
                 String id = e.getOption("id").getAsString();
@@ -102,6 +110,13 @@ public class CommandManager extends ListenerAdapter {
                 throw new IllegalArgumentException("Unknown type");
         }
         return true;
+    }
+
+    public boolean hasPermission(SlashCommandEvent e){
+        if (e.getMember().isOwner()) {
+            return true;
+        }
+        return false;
     }
 
 }
