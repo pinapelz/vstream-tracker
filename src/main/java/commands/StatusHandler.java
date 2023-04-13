@@ -15,6 +15,18 @@ public class StatusHandler {
                         "Holodex Organization Name (e.g Hololive, Nijisanji, Phase Connect, PRISM, Production Kawaii)",
                         true))
                 .queue();
+        jda.upsertCommand(new CommandData("schedule-channel", "Shows upcoming streams and events for a given channel ID")
+                .addOption(OptionType.STRING, "channel-id",
+                        "YouTube Channel ID (e.g UCp6993wxpyDPHUpavwDFqgg)",
+                        true))
+                .queue();
+        jda.upsertCommand(new CommandData("configure-stream-channel", "Sets channel to be updated with live and upcoming streams for the channel ID provided")
+                .addOption(OptionType.STRING,"channel-id", "YouTube Channel ID (e.g UCp6993wxpyDPHUpavwDFqgg)", true))
+                .queue();
+        jda.upsertCommand(new CommandData("configure-org-channel", "Sets channel to be updated with live and upcoming streams for the organization provided")
+                .addOption(OptionType.STRING,"organization", "Holodex Organization Name (e.g Hololive, Nijisanji, Phase Connect, PRISM, Production Kawaii)", true))
+                .queue();
+
 
     }
 
