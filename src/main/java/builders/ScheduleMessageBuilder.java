@@ -23,7 +23,7 @@ public class ScheduleMessageBuilder {
         String pfp = videos.get(0).channel.photo;
         EmbedBuilder messageBuilder = new EmbedBuilder()
                 .setThumbnail(pfp)
-                .setTitle("Upcoming and Live Streams for " + videos.get(0).channel.org)
+                .setTitle("Upcoming and Live Streams")
                 .setDescription("The schedule you asked for")
                 .setColor(new Color(COLOR))
                 .setTimestamp(OffsetDateTime.now());
@@ -36,6 +36,9 @@ public class ScheduleMessageBuilder {
                 unixTimeStr = "LIVE \uD83D\uDD34";
             }
             String titleText = video.channel.english_name + " - " + unixTimeStr;
+            if (video.channel.english_name.equals(null)){
+                titleText = video.channel.name + " - " + unixTimeStr;
+            }
             String videoURL = "https://www.youtube.com/watch?v=" + video.id;
             messageBuilder.addField(titleText, "["+video.title+"]"+"("+videoURL+")", false);
         }
@@ -46,10 +49,14 @@ public class ScheduleMessageBuilder {
     public ArrayList<MessageEmbed> getUpcomingLiveListMessages(List<SimpleVideo> simpleVideos){
         ArrayList<MessageEmbed> messageEmbeds = new ArrayList<>();
         for (SimpleVideo video : simpleVideos){
-            String title = video.channel.english_name + " is streaming soon!   ⏰";
+            String channel_name  = video.channel.english_name;
+            if (channel_name.equals(null)){
+                channel_name = video.channel.name;
+            }
+            String title = channel_name + " is streaming soon!   ⏰";
             String fieldTitle = "Scheduled Start Time";
             if (video.status.equals("live")){
-                title = video.channel.english_name + " is live!   \uD83D\uDD34";
+                title = channel_name + " is live!   \uD83D\uDD34";
                 fieldTitle = "Live Since";
             }
             String gmtStartTime = video.start_scheduled;
