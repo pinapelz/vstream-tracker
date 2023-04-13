@@ -88,6 +88,7 @@ public class Main extends ListenerAdapter{
     public void onReady(net.dv8tion.jda.api.events.ReadyEvent event) {
         System.out.println("Logged in as " + event.getJDA().getSelfUser().getAsTag());
         statusHandler = new StatusHandler(jda);
+        //statusHandler.purgeSlashCommands();
         statusHandler.updateSlashCommands();
         initializeAutoRefresh();
         System.out.println("Bot is ready!");
