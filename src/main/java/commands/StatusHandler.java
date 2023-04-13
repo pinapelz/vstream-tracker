@@ -31,6 +31,8 @@ public class StatusHandler {
                                 .addChoice("Organization", "org"))
                         .addOption(OptionType.STRING, "id", "The name of the organization or the channel ID", true))
                 .queue();
+        jda.upsertCommand(new CommandData("remove-config", "Removes the configuration for the channel this command is run in")
+                .addOption(OptionType.STRING, "term", "The channel ID or Organization")).queue();
 
 
     }

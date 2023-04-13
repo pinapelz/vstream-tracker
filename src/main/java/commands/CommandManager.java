@@ -24,7 +24,14 @@ public class CommandManager extends ListenerAdapter {
         String command = e.getName();
         MessageEmbed scheduleMessage;
         switch (command) {
+            case "remove-config":
+                String searchTerm = e.getOption("term").getAsString();
+                long currentDiscChannelID = e.getChannel().getIdLong();
+                ucm.removeEntry(searchTerm, currentDiscChannelID);
+                e.reply("Successfully removed " + searchTerm + " from this channel. Please restart the bot for this to take effect").queue();
+                break;
             case "configure":
+                System.out.println("RUNNING?");
                 String type  = e.getOption("type").getAsString();
                 String id = e.getOption("id").getAsString();
                 long discordChannelId = e.getChannel().getIdLong();
