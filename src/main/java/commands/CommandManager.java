@@ -10,13 +10,15 @@ import vtuber.ScheduleHandler;
 import java.util.ArrayList;
 
 public class CommandManager extends ListenerAdapter {
-    ScheduleHandler scheduleHandler;
-    ScheduleMessageBuilder scb;
-    UpcomingChannelsManager ucm;
-    public CommandManager(String holodexAPIKey) {
+    private ScheduleHandler scheduleHandler;
+    private ScheduleMessageBuilder scb;
+    private UpcomingChannelsManager ucm;
+    private long adminRole;
+    public CommandManager(String holodexAPIKey, long adminRole) {
         scheduleHandler = new ScheduleHandler(holodexAPIKey);
         scb = new ScheduleMessageBuilder();
         ucm = new UpcomingChannelsManager();
+        this.adminRole = adminRole;
         System.out.println("CommandManager initialized");
     }
     @Override
@@ -113,7 +115,7 @@ public class CommandManager extends ListenerAdapter {
     }
 
     public boolean hasPermission(SlashCommandEvent e){
-        if (e.getMember().isOwner()) {
+        if (e.getMember().isOwner() || e.getMember().getRoles().contains(e.getGuild().getRoleById(adminRole))){
             return true;
         }
         return false;

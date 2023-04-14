@@ -24,10 +24,12 @@ public class Main extends ListenerAdapter{
     private JDABuilder jdaBuilder;
     private FileDataProcessor fileDataProcessor;
     private CommandManager commandManager;
+    private long adminRoleId;
 
     public void initializeBot(){
         fileDataProcessor = new FileDataProcessor();
-        commandManager = new CommandManager(fileDataProcessor.getField("holodexAPIKey"));
+        adminRoleId = Long.parseLong(fileDataProcessor.getField("adminRole"));
+        commandManager = new CommandManager(fileDataProcessor.getField("holodexAPIKey"), adminRoleId);
         jdaBuilder = JDABuilder.createDefault(fileDataProcessor.getField("discordToken"));
         jdaBuilder.addEventListeners(commandManager);
         jdaBuilder.addEventListeners(this);
