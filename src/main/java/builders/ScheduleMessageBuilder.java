@@ -56,7 +56,11 @@ public class ScheduleMessageBuilder {
         ArrayList<MessageEmbed> messageEmbeds = new ArrayList<>();
         for (SimpleVideo video : simpleVideos){
             String channel_name  = video.channel.english_name;
-            if (channel_name.equals(null)){
+            try {
+                if (video.channel.english_name.equals(null)) {
+                    channel_name = video.channel.name;
+                }
+            } catch (NullPointerException e){
                 channel_name = video.channel.name;
             }
             String title = channel_name + " is streaming soon!   ⏰";
