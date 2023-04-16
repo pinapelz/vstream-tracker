@@ -1,11 +1,11 @@
 package vtuber;
 
-import com.pina.Holodex;
-import com.pina.HolodexException;
-import com.pina.datatypes.Channel;
-import com.pina.datatypes.SimpleVideo;
-import com.pina.query.ChannelQueryBuilder;
-import com.pina.query.VideoQueryBuilder;
+import com.pinapelz.Holodex;
+import com.pinapelz.HolodexException;
+import com.pinapelz.datatypes.Channel;
+import com.pinapelz.datatypes.SimpleVideo;
+import com.pinapelz.query.ChannelQueryBuilder;
+import com.pinapelz.query.VideoQueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

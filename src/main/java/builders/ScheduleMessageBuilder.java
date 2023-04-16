@@ -1,6 +1,6 @@
 package builders;
 
-import com.pina.datatypes.SimpleVideo;
+import com.pinapelz.datatypes.SimpleVideo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import java.text.NumberFormat;
