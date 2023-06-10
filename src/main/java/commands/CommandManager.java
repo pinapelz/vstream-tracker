@@ -3,7 +3,7 @@ package commands;
 import builders.ScheduleMessageBuilder;
 import fileutils.UpcomingChannelsManager;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import vtuber.ScheduleHandler;
 
@@ -22,7 +22,7 @@ public class CommandManager extends ListenerAdapter {
         System.out.println("CommandManager initialized");
     }
     @Override
-    public void onSlashCommand(SlashCommandEvent e) {
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
         String command = e.getName();
         MessageEmbed scheduleMessage;
         switch (command) {
@@ -114,7 +114,7 @@ public class CommandManager extends ListenerAdapter {
         return true;
     }
 
-    public boolean hasPermission(SlashCommandEvent e){
+    public boolean hasPermission(SlashCommandInteractionEvent e){
         if (e.getMember().isOwner() || e.getMember().getRoles().contains(e.getGuild().getRoleById(adminRole))){
             return true;
         }
