@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import javax.security.auth.login.LoginException;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -36,7 +36,7 @@ public class Main extends ListenerAdapter{
         try {
             jda = jdaBuilder.build();
         }
-        catch (LoginException e) {
+        catch (Exception e) {
             System.out.println("Unable to login with the provided token. Please check your token and try again.");
             throw new RuntimeException(e);
         }
@@ -87,7 +87,7 @@ public class Main extends ListenerAdapter{
     }
 
     @Override
-    public void onReady(net.dv8tion.jda.api.events.ReadyEvent event) {
+    public void onReady(ReadyEvent event) {
         System.out.println("Logged in as " + event.getJDA().getSelfUser().getAsTag());
         statusHandler = new StatusHandler(jda);
         //statusHandler.purgeSlashCommands();
