@@ -29,8 +29,8 @@ public class Main extends ListenerAdapter{
     public void initializeBot(){
         fileDataProcessor = new FileDataProcessor();
         adminRoleId = Long.parseLong(fileDataProcessor.getField("adminRole"));
-        commandManager = new CommandManager(fileDataProcessor.getField("holodexAPIKey"), adminRoleId);
-        jdaBuilder = JDABuilder.createDefault(fileDataProcessor.getField("discordToken"));
+        commandManager = new CommandManager(fileDataProcessor.getField("HOLODEXAPIKEY"), adminRoleId);
+        jdaBuilder = JDABuilder.createDefault(fileDataProcessor.getField("DISCORDTOKEN"));
         jdaBuilder.addEventListeners(commandManager);
         jdaBuilder.addEventListeners(this);
         try {
@@ -49,14 +49,18 @@ public class Main extends ListenerAdapter{
             try {
                 System.out.println("Refreshing upcoming channels");
                 List<OrgChannelTuple> refreshChannels = fileDataProcessor.getRefreshChannels();
+                List<Long> usedChannels = fileDataProcessor.getUsedChannels();
+                for (Long channelId : usedChannels) {
+                    System.out.println("Purging channel " + channelId);
+                    jda.getTextChannelById(channelId).purgeMessages(
+                            jda.getTextChannelById(channelId).getIterableHistory().complete());
+                }
                 if (refreshChannels.size() == 0) {
                     System.out.println("No channels to refresh");
                     return;
                 }
                 for (OrgChannelTuple orgChannelTuple : refreshChannels) {
                     System.out.println("Refreshing " + orgChannelTuple.getType() + " " + orgChannelTuple.getName());
-                    jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).purgeMessages(
-                            jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).getIterableHistory().complete());
                     List<MessageEmbed> messageEmbeds = commandManager.updateUpcomingChannel(orgChannelTuple.getName(), orgChannelTuple.getType());
                     if (messageEmbeds.size() == 0) {
                         continue;

@@ -32,7 +32,6 @@ public class FileDataProcessor {
             System.out.println("An error occurred while reading the credential file");
         }
         return "";
-
     }
 
     public List<OrgChannelTuple> getRefreshChannels(){
@@ -53,6 +52,24 @@ public class FileDataProcessor {
             System.out.println("Unable to create upcomingChannels.txt file for updating Discord Channels");
         }
         return orgChannelTuples;
+    }
+
+    public List<Long> getUsedChannels(){
+        List<Long> usedChannels = new ArrayList<>();
+        try{
+            File channelFile = new File("settings//upcomingChannels.txt");
+            if(channelFile.createNewFile()){
+                System.out.println("upcomingChannels.txt created. Please fill it out with the organizations you want to track (refer to README)");
+            }
+            for (String line : Files.readAllLines(Paths.get("settings//upcomingChannels.txt"))) {
+                String discChannelIdStr = line.split(":")[2];
+                long discChannel = Long.parseLong(discChannelIdStr);
+                usedChannels.add(discChannel);
+            }
+        } catch (IOException e) {
+            System.out.println("Unable to create upcomingChannels.txt file for updating Discord Channels");
+        }
+        return usedChannels;
     }
 
 }
