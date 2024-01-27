@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Main extends ListenerAdapter{
-    private int REFRESH_INTERVAL = 15;
+    private int REFRESH_INTERVAL = 15; // in minutes
+    private int MESSAGE_SEND_COOLDOWN = 1; // in seconds
     private JDA jda;
     private StatusHandler statusHandler;
     private JDABuilder jdaBuilder;
@@ -67,6 +68,7 @@ public class Main extends ListenerAdapter{
                     }
                     for (MessageEmbed messageEmbed : messageEmbeds) {
                         jda.getTextChannelById(orgChannelTuple.getDiscordChannelId()).sendMessageEmbeds(messageEmbed).queue();
+                        Thread.sleep(MESSAGE_SEND_COOLDOWN * 1000); // prevent discord rate limiting
                     }
                 }
             }
